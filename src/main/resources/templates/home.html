@@ -1,0 +1,37 @@
+<html xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="layout/main.html">
+<div class="container-fluid" layout:fragment="homeFragment">
+    <div class="row target">
+
+    </div>
+    <script>
+        loadContent()
+        function loadContent(){
+            const request = new XMLHttpRequest();
+            request.onreadystatechange = function() {
+                if (this.readyState === request.DONE && this.status == 200) {
+                    let items = JSON.parse(request.responseText);
+                    for(let i = 0; items.length;i++){
+                        let htmlCode = "";
+                        const target = document.querySelector('.target');
+                        htmlCode = htmlCode + "<div class='card'>";
+                        htmlCode = htmlCode + "<h4 class='card-title'>" + items[i].name + "</h4>";
+                        htmlCode = htmlCode + "<h4 class='card-title'>" + items[i].price + "</h4>";
+                        htmlCode = htmlCode + "<h4 class='card-title'>" + items[i].amount + "</h4>";
+                        for(let j = 0; j < items[i].categories.length; j++){
+                            htmlCode = htmlCode + "<h4 class='card-title'>" + items[i].categories[j].name + "</h4>";
+                        }
+                        htmlCode = htmlCode + `<a class='btn btn-primary' href='/front/details/${items[i].id}'>DETAILS</a>`;
+                        htmlCode = htmlCode + "</div>";
+                        let newDiv = document.createElement('div');
+                        newDiv.innerHTML = htmlCode;
+                        target.append(newDiv);
+                    }
+                }
+            };
+            request.open("GET", "/item");
+            request.send();
+        }
+    </script>
+</div>
+
+</html>
